@@ -156,6 +156,47 @@ python -m copilot ask "Hello!"   # quick one-shot question
 
 ---
 
+## Concurrency & stress test
+
+The server bridges a **single** signed-in Copilot account, and Copilot's chat
+socket doesn't tolerate concurrent conversations from one process. So the server
+**serializes** upstream calls: parallel HTTP requests queue behind a lock and run
+one at a time (see [server/api.py](server/api.py)). This is intentional, and it
+means throughput is sequential, not parallel.
+
+You can measure where it breaks with the included stress test, which fires a
+batch of simultaneous requests and **doubles the batch size every successful
+round** until the first error:
+
+```bash
+# Start the server in one terminal
+python app.py
+
+# Ramp concurrency in another (1 → 2 → 4 → 8 → …)
+python tests/stress.py
+python tests/stress.py --max 64 --timeout 120 --url http://localhost:8000
+```
+
+**Sample run** (one signed-in account):
+
+| Concurrency | Result | Wall time | Latency (min / median / max) |
+| --- | --- | --- | --- |
+| 1 | ✓ all ok | 3.7s | 3.7 / 3.7 / 3.7s |
+| 2 | ✓ all ok | 4.6s | 3.4 / 4.6 / 4.6s |
+| 4 | ✓ all ok | 8.3s | 3.7 / 6.7 / 8.3s |
+| 8 | ✗ 1 failed (`HTTP 502`) | 13.3s | 3.5 / 9.7 / 13.3s |
+
+**Highest fully-successful concurrency: 4.** Wall time roughly doubles each round
+while *minimum* latency stays flat (~3.5s) — the signature of a serialized queue:
+one request runs immediately, the rest wait their turn. The failure at 8 is an
+upstream `502` (Copilot rejecting requests under load), not a server crash or
+timeout — so the exact break point is flaky and may vary between runs.
+
+> Takeaway: keep concurrent in-flight requests low (≈ 1–4). This is a personal
+> bridge, not a high-throughput gateway — and please don't hammer your account.
+
+---
+
 ## Project layout
 
 | Path | What it does |
@@ -163,6 +204,7 @@ python -m copilot ask "Hello!"   # quick one-shot question
 | [copilot/](copilot/) | The core library: `CopilotClient`, auth, browser sign-in, HTTP driver |
 | [server/](server/) | The FastAPI OpenAI-compatible server |
 | [examples/](examples/) | Runnable examples for every feature ([examples/README.md](examples/README.md)) |
+| [tests/](tests/) | Test scripts, including the concurrency stress test ([tests/stress.py](tests/stress.py)) |
 | [app.py](app.py) | Starts the server |
 
 ---
