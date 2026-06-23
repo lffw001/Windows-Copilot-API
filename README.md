@@ -17,6 +17,25 @@ You sign in once with your Microsoft account in a browser; your session is saved
 
 ---
 
+## Table of contents
+
+- [Why use this?](#why-use-this)
+- [Requirements](#requirements)
+- [Setup (2 minutes)](#setup-2-minutes)
+- [Run with Docker (optional)](#run-with-docker-optional)
+- [Usage 1: In Python (no server)](#usage-1-in-python-no-server)
+- [Usage 2: As an OpenAI-compatible server](#usage-2-as-an-openai-compatible-server)
+- [Command line](#command-line)
+- [Concurrency & stress test](#concurrency--stress-test)
+- [Rate limiting](#rate-limiting)
+- [Project layout](#project-layout)
+- [Notes & limitations](#notes--limitations)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+- [Star History](#star-history)
+
+---
+
 ## Why use this?
 
 - **Free:** uses your normal signed-in Copilot, no API billing.
@@ -76,6 +95,8 @@ python -m copilot login
 The browser **closes by itself** once sign-in is detected — you don't need to press Enter or close it manually. The steps are logged to `session/login.log` if anything goes wrong. That's it: your session is saved under `session/` (git-ignored, never shared) and reused on every run.
 
 > 💡 You can even skip step 3: the **first** time you call `chat()` or start the server, it opens the sign-in browser for you automatically.
+
+> 🛠️ **Run into trouble during setup or your first run?** Head to the [Troubleshooting](#troubleshooting) section, the bundled diagnostic both *fixes* common issues (captcha/clearance) and *logs* a shareable report.
 
 ---
 
@@ -314,7 +335,7 @@ usually obvious.
 
 ## License
 
-For personal and educational use. You are responsible for complying with Microsoft's terms of service.
+Released under the [MIT License](LICENSE). As this is an unofficial project, you remain responsible for complying with Microsoft's terms of service.
 
 ---
 
