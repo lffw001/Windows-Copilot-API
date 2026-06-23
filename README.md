@@ -286,3 +286,15 @@ On datacenter IPs Cloudflare withholds bot-clearance, so the chat socket stalls 
 ## License
 
 For personal and educational use. You are responsible for complying with Microsoft's terms of service.
+
+---
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=sums001%2FWindows-Copilot-API&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sums001/Windows-Copilot-API&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sums001/Windows-Copilot-API&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sums001/Windows-Copilot-API&type=date&legend=top-left" />
+ </picture>
+</a>
